@@ -1,0 +1,32 @@
+pipeline{
+    agent{
+        node{
+            lanel:'JekinsSalvelable'
+        }
+    }
+    stages{
+        stage("checkout code"){
+            step{
+                git url:'https://github.com/swap665/cicdproject.git',branch:main
+            }
+        }
+        stage("docker image"){
+            step{
+                sh 'docker build -t myimage'
+            }
+        }
+        stage("docker push"){
+            step{
+                sh 'docker tag myimage swakam/myimage'
+
+                sh 'docker push swakam/myimage'
+
+            }
+        }
+        stage('kubernates deployment'){
+            step{
+                sh 'kubectl apply -f mydeployment.yml'
+            }
+        }
+    }
+}
